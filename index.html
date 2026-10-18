@@ -1,0 +1,548 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>영상제작 실습 프롬프트 모음집</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap"><style>:root{color-scheme:light}img{max-width:100%}[hidden]{display:none!important}</style><script>window.ASSET_BASE="./";</script></head><body>
+<style>
+/* Layout: 표지(풀폭 블루 밴드) → STEP별 페이지(카드) → 하단 고정 페이지 이동 바 */
+:root{
+  --bg:#F5F8FD;
+  --surface:#FFFFFF;
+  --ink:#0E1E3A;
+  --muted:#5A6B88;
+  --line:#DCE5F3;
+  --blue:#1F5BD8;
+  --blue-deep:#123C9C;
+  --blue-soft:#E8EFFC;
+  --point:#FF6A3D;
+  --point-soft:#FFF0EA;
+  --code-bg:#F8FAFE;
+  --on-blue:#FFFFFF;
+  --font-display:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0B1324;--surface:#121D33;--ink:#E6EDFA;--muted:#9AABC8;--line:#24324F;
+  --blue:#5B8CFF;--blue-deep:#173A86;--blue-soft:#1A2A4C;--point:#FF8A63;--point-soft:#3A2018;
+  --code-bg:#0F192D;--on-blue:#FFFFFF;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0B1324;--surface:#121D33;--ink:#E6EDFA;--muted:#9AABC8;--line:#24324F;
+  --blue:#5B8CFF;--blue-deep:#173A86;--blue-soft:#1A2A4C;--point:#FF8A63;--point-soft:#3A2018;
+  --code-bg:#0F192D;--on-blue:#FFFFFF;color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.7;margin:0}
+.wrap{max-width:920px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* ---------- 표지 ---------- */
+.cover{background:var(--blue-deep);color:var(--on-blue);position:relative;overflow:hidden}
+.cover::after{content:"";position:absolute;inset:auto 0 0 0;height:10px;
+  background:repeating-linear-gradient(90deg,var(--on-blue) 0 18px,transparent 18px 36px);opacity:.18}
+.cover .wrap{padding-block:72px 84px;display:grid;gap:28px}
+.cover-meta{display:flex;flex-wrap:wrap;gap:8px 18px;font-family:var(--font-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.8}
+.cover-meta .rec{display:inline-flex;align-items:center;gap:8px;color:var(--point)}
+.cover-meta .rec::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--point)}
+.cover h1{font-family:var(--font-display);font-weight:700;font-size:clamp(32px,6.4vw,58px);line-height:1.18;margin:0;text-wrap:balance;letter-spacing:-.02em}
+.cover h1 em{font-style:normal;color:var(--point)}
+.cover p{margin:0;max-width:34em;font-size:16px;opacity:.86}
+.cover-tag{display:inline-block;font-family:var(--font-mono);font-size:12px;letter-spacing:.1em;border:1px solid rgba(255,255,255,.35);padding:6px 12px;border-radius:999px;justify-self:start}
+
+/* ---------- 프롬프트 페이지 ---------- */
+.page{padding-block:56px 72px}
+.page-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:28px;padding-bottom:16px;border-bottom:2px solid var(--ink)}
+.page-head h2{margin:0;font-size:24px;font-weight:700;letter-spacing:-.01em}
+.page-head .count{font-family:var(--font-mono);font-size:12px;color:var(--muted);letter-spacing:.1em}
+
+.steps{display:grid;gap:24px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0}
+.card-head{display:flex;align-items:center;gap:14px;padding:18px 20px;border-bottom:1px solid var(--line);background:var(--blue-soft)}
+.step-no{font-family:var(--font-mono);font-weight:700;font-size:12px;letter-spacing:.1em;color:var(--on-blue);background:var(--blue);padding:6px 10px;border-radius:6px;white-space:nowrap}
+.card-head h3{margin:0;font-size:18px;font-weight:700;flex:1;min-width:0}
+.copy-btn{font-family:var(--font-mono);font-weight:700;font-size:12px;letter-spacing:.12em;cursor:pointer;
+  border:1.5px solid var(--point);color:var(--point);background:var(--surface);padding:8px 14px;border-radius:8px;
+  display:inline-flex;align-items:center;gap:6px;transition:background .15s,color .15s}
+.copy-btn:hover{background:var(--point);color:var(--on-blue)}
+.copy-btn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.copy-btn.done{background:var(--point);color:var(--on-blue)}
+.copy-btn svg{width:14px;height:14px}
+
+.samples{margin:14px 20px 0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.filebox{margin:16px 20px 0;border:1.5px solid var(--blue);border-radius:12px;padding:12px 14px;display:grid;gap:8px;background:var(--blue-soft)}
+.filebox-title{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--blue)}
+.file-row{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:10px 12px;flex-wrap:wrap}
+.file-ext{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--point);background:var(--point-soft);padding:6px 8px;border-radius:6px;min-width:44px;text-align:center}
+.file-info{flex:1;min-width:0;display:grid;line-height:1.45}
+.file-info b{font-weight:600;font-size:14px;overflow-wrap:anywhere}
+.file-info small{color:var(--muted);font-size:12px}
+.samples.one{grid-template-columns:minmax(0,640px)}
+.sample{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--code-bg);display:grid;grid-template-rows:auto 1fr;min-width:0}
+.sample img{display:block;width:100%;aspect-ratio:1/1;object-fit:contain;background:var(--blue-soft)}
+.sample-body{padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.sample-label{font-size:13px;font-weight:600;line-height:1.4}
+.sample-label small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.dl-btn{font-family:var(--font-mono);font-weight:700;font-size:11px;letter-spacing:.1em;cursor:pointer;text-decoration:none;
+  border:none;background:var(--blue);color:var(--on-blue);padding:7px 11px;border-radius:7px;display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.dl-btn:hover{background:var(--blue-deep)}
+.dl-btn:focus-visible{outline:3px solid var(--point);outline-offset:2px}
+.dl-btn svg{width:13px;height:13px}
+.sample-note{margin:10px 20px 0;font-size:13px;color:var(--muted)}
+.sample-note b{color:var(--point)}
+.card-desc{padding:14px 20px 0;color:var(--muted);font-size:14px;margin:0}
+.prompt{margin:14px 20px 20px;background:var(--code-bg);border:1px solid var(--line);border-radius:10px;
+  padding:18px 20px;max-height:520px;overflow:auto;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;font-size:14px;line-height:1.8}
+.prompt .h{display:block;font-weight:700;color:var(--blue);margin-top:6px}
+.prompt .ph{background:var(--point-soft);color:var(--point);font-weight:600;border-radius:4px;padding:0 3px}
+.card-foot{padding:0 20px 18px;font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 16px}
+.card-foot b{color:var(--ink);font-weight:600}
+
+/* ---------- 페이지 넘김 ---------- */
+body{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+.pager{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--surface);border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom,0px)}
+.pager-in{max-width:920px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:12px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.pg-btn{font-family:var(--font-body);font-weight:600;font-size:14px;cursor:pointer;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);
+  padding:9px 16px;border-radius:9px;white-space:nowrap}
+.pg-btn:hover:not(:disabled){border-color:var(--blue);color:var(--blue)}
+.pg-btn:disabled{opacity:.35;cursor:default}
+.pg-btn.pg-next{background:var(--blue);border-color:var(--blue);color:var(--on-blue)}
+.pg-btn.pg-next:hover:not(:disabled){background:var(--blue-deep);color:var(--on-blue)}
+.pg-btn:focus-visible,.pg-dot:focus-visible{outline:3px solid var(--point);outline-offset:2px}
+.pg-dots{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-width:0}
+.pg-dot{font-family:var(--font-mono);font-size:11px;font-weight:700;letter-spacing:.06em;cursor:pointer;border:none;background:var(--blue-soft);color:var(--muted);
+  padding:6px 9px;border-radius:999px}
+.pg-dot[aria-current="page"]{background:var(--point);color:var(--on-blue)}
+.cover-start{justify-self:start;font-family:var(--font-body);font-weight:700;font-size:15px;cursor:pointer;border:none;background:var(--point);color:var(--on-blue);
+  padding:12px 22px;border-radius:10px}
+.cover-start:focus-visible{outline:3px solid var(--on-blue);outline-offset:3px}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+@media (max-width:560px){
+  .card-head{flex-wrap:wrap}
+  .card-head h3{flex-basis:100%;order:3}
+  .copy-btn{margin-left:auto}
+  .prompt{margin-inline:14px;padding:14px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<!-- ===== 1페이지 : 표지 ===== -->
+<header class="cover">
+  <div class="wrap">
+    <div class="cover-meta"><span class="rec">REC</span><span>Prompt Collection</span><span>AI Video Workshop</span></div>
+    <h1>생성형 AI를 활용한<br><em>영상제작</em> 실습</h1>
+    <p>인물 레퍼런스부터 장면 생성까지, 실습 단계별로 바로 복사해 쓰는 프롬프트 모음입니다.</p>
+    <span class="cover-tag">STEP BY STEP · COPY &amp; PASTE</span>
+    <button type="button" class="cover-start" id="coverStart">STEP 1 시작하기 →</button>
+  </div>
+</header>
+
+<!-- ===== 2페이지~ : 프롬프트 모음 ===== -->
+<main class="page">
+  <div class="wrap">
+    <div class="page-head">
+      <h2>실습 프롬프트</h2>
+      <span class="count" id="stepCount"></span>
+    </div>
+
+    <section class="steps" id="steps"></section>
+
+  </div>
+</main>
+
+<nav class="pager" id="pager" aria-label="페이지 이동">
+  <div class="pager-in">
+    <button type="button" class="pg-btn" id="pgPrev">← 이전</button>
+    <div class="pg-dots" id="pgDots"></div>
+    <button type="button" class="pg-btn pg-next" id="pgNext">다음 →</button>
+  </div>
+</nav>
+
+<div class="toast" id="toast" role="status" aria-live="polite">복사했습니다</div>
+
+<!-- ===================================================================
+     프롬프트 원문 : 새 STEP을 추가할 때는 아래 형식대로 블록을 하나 더 넣으세요.
+     data-step = STEP 번호, data-title = 섹션명, data-desc = 한 줄 설명(선택),
+     data-attach = 첨부물 안내(선택)
+     =================================================================== -->
+<script type="text/plain" class="prompt-src" data-step="1" data-title="인물 레퍼런스 보드 만들기" data-desc="첨부한 인물 사진을 기준으로 정면·3/4·측면·뒷모습·클로즈업 5컷 레퍼런스 시트를 만듭니다. 이후 장면 생성 단계에서 인물 일관성의 기준 이미지로 씁니다." data-attach="인물 사진 1장">
+첨부한 인물 사진을 정체성 기준 이미지로 사용하여, 한 사람의 외형을 여러 방향에서 확인할 수 있는 인물 레퍼런스 보드를 제작하세요.
+
+## 사용자 설정
+
+- 인물 분위기: [예: 세련되고 지적인 전문 강사 / 청량한 광고 모델]
+- 헤어스타일: [예: 자연스러운 웨이브의 긴 머리, 6:4 가르마]
+- 헤어 컬러: [예: 자연스러운 다크 브라운]
+- 상의: [예: 아이보리 실크 블라우스]
+- 하의: [예: 블랙 슬림핏 슬랙스]
+- 신발: [예: 블랙 미들힐]
+- 메이크업: [예: 자연스러운 세미 매트 피부, 코랄 립, 은은한 음영 메이크업]
+- 기본 표정: [예: 입을 다문 부드러운 미소]
+- 전체 무드: [예: 단정하고 우아하며 신뢰감 있는 분위기]
+
+## 화면 구성
+
+순백색 스튜디오 배경 위에 동일 인물을 가로 1행 5칸으로 균등하게 배치한다. 각 칸은 독립된 인물 사진처럼 명확히 구분하되, 전체 결과물은 하나의 정돈된 캐릭터 레퍼런스 시트처럼 보이게 구성합니다.
+
+1. 첫 번째 칸: 카메라를 똑바로 바라보는 정면 전신
+2. 두 번째 칸: 얼굴과 몸을 약 45도 돌린 3/4 전신
+3. 세 번째 칸: 정확한 측면 전신
+4. 네 번째 칸: 카메라 반대편을 향한 뒷모습 전신
+5. 다섯 번째 칸: 정면에 가까운 얼굴 중심의 표정 클로즈업
+
+## 인물 일관성 기준
+
+첨부 사진 속 인물의 고유한 정체성을 모든 칸에 동일하게 적용한다. 얼굴형, 눈·코·입의 형태와 위치, 눈썹 모양, 피부톤, 헤어라인, 체형, 신체 비율, 나이대와 전체적인 인상을 임의로 재해석하지 않습니다.
+
+다섯 장면 모두 동일한 사람, 동일한 헤어 길이와 볼륨, 동일한 의상 디자인과 착용 상태, 동일한 메이크업 농도와 기본 표정을 유지한다. 각 칸에서 달라지는 요소는 카메라 방향, 인물의 회전 각도, 촬영 범위뿐입니다.
+
+첨부 인물을 과도하게 미화하거나 다른 연예인형 얼굴로 변경하지 않는다. 얼굴을 새롭게 만들거나 좌우 칸마다 이목구비, 체형, 나이, 피부색이 달라지지 않도록 합니다.
+
+## 촬영 스타일
+
+깨끗한 화이트 호리존 스튜디오, 부드럽고 균일한 확산광, 모든 칸에서 동일한 색온도와 노출, 자연스럽고 정교한 피부 질감, 선명한 의상 디테일, 왜곡이 적은 패션 룩북 촬영 방식.
+
+전신 장면은 머리부터 발끝까지 잘리지 않게 담고, 동일한 카메라 높이와 인물 크기를 유지한다. 다섯 번째 칸만 얼굴과 어깨 중심의 뷰티 클로즈업으로 표현합니다.
+
+## 제외 사항
+
+서로 다른 인물, 얼굴 변형, 헤어 길이 변화, 의상 변경, 액세서리 추가, 과도한 보정, 비현실적인 신체 비율, 손가락 오류, 중복 신체, 배경 소품, 칸별 조명 차이, 글자, 번호, 로고, 워터마크를 포함하지 않습니다.
+
+가로형 16:9 화면비, 1×5 인물 콜라주, 고해상도.
+</script>
+
+<script type="text/plain" class="prompt-src" data-step="2" data-title="햄버거 광고 사진 만들기" data-desc="STEP 1에서 만든 인물, 샘플 햄버거, 샘플 포즈 이미지를 합쳐 흰 스튜디오 배경의 햄버거 광고 사진 한 장을 만듭니다." data-attach="① STEP 1 결과 이미지 ② 제품 샘플 ③ 포즈 샘플 (이 순서대로 3장)" data-samples="sample-2-product.jpg|두 번째 이미지|제품 기준 · 햄버거;sample-3-pose.jpg|세 번째 이미지|포즈·구도 기준" data-note="&lt;b&gt;첫 번째 이미지&lt;/b&gt;는 STEP 1에서 만든 내 인물 레퍼런스 보드를 사용하세요.">
+첨부한 이미지 3장을 각각 다음 기준으로 사용하여 사실적인 햄버거 광고 사진 한 장을 만들어 주세요. 배경은 흰 스튜디오.
+
+- 첫 번째 이미지: 인물 기준. 얼굴, 이목구비, 헤어스타일, 의상을 유지하세요.
+- 두 번째 이미지: 제품 기준. 빵의 형태와 색감, 패티, 치즈, 채소, 소스의 구성과 쌓인 순서를 유지하세요.
+- 세 번째 이미지: 포즈와 구도 기준. 햄버거를 잡는 양손의 위치, 얼굴 각도, 시선, 입 모양과 상반신 구도를 참고하세요. 세 번째 인물의 얼굴은 반영하지 마세요.
+
+첫 번째 인물이 두 번째 이미지의 햄버거를 양손으로 들고, 세 번째 이미지처럼 맛있게 한입 베어 먹으려는 순간을 표현해 주세요.
+
+햄버거는 손과 얼굴에 맞는 자연스러운 크기로 표현하고, 손가락과 입이 햄버거에 닿는 부분을 사실적으로 묘사하세요. 얼굴과 햄버거가 잘 보이도록 하고, 자연스러운 피부 질감과 먹음직스러운 음식의 질감을 살려 주세요.
+
+배경은 밝은 흰색 스튜디오로, 문구·로고·워터마크 없이 제작해 주세요.
+</script>
+
+<script type="text/plain" class="prompt-src" data-step="3" data-title="9가지 시점 레퍼런스 보드 만들기" data-desc="STEP 2에서 만든 광고 사진을 기준으로, 같은 인물·같은 동작을 카메라 위치만 바꿔 9컷으로 촬영한 레퍼런스 보드를 만듭니다. 영상 장면 전환의 기준 컷으로 씁니다." data-attach="STEP 2 결과 이미지 1장" data-samples="sample-3-reference.jpg|실습용 샘플|9시점 레퍼런스 보드 예시|16/9" data-note="※ 실습 이미지를 다운받아서 연습해보셔도 괜찮습니다.">
+첨부 이미지를 기준으로, 동일한 인물을 아홉 가지 시점에서 촬영한 레퍼런스 보드를 제작해 주세요.
+
+[공통 유지 조건]
+- 인물의 얼굴형, 이목구비, 피부톤, 나이대, 헤어스타일과 의상을 유지합니다.
+- 표정과 동작은 기준 사진을 따르고, 카메라의 위치와 촬영 거리만 변경합니다.
+- 제품을 들고 있다면 제품의 형태, 크기, 재료 구성과 손으로 잡는 위치를 유지합니다.
+- 배경과 조명의 색감·밝기를 통일하고, 시점에 따른 자연스러운 그림자 변화만 허용합니다.
+- 자연스러운 피부와 의상 질감을 표현하며, 얼굴과 신체를 과도하게 보정하지 않습니다.
+- 기준 사진에 보이지 않는 신체와 공간은 기존 모습에 어울리도록 자연스럽게 완성하고, 모든 컷에서 일관되게 유지합니다.
+
+[9가지 촬영 뷰 — 왼쪽 위부터 순서대로]
+1. 정면
+카메라를 인물의 눈높이에 두고 정면에서 촬영합니다. 얼굴과 상반신을 명확하게 보여줍니다.
+
+2. 사선 45도
+카메라를 눈높이에 두고 인물 본인의 오른쪽으로 약 45도 이동하여 촬영합니다. 양쪽 눈이 보이면서 코, 볼, 턱의 입체감이 드러나도록 합니다.
+
+3. 정확한 우측면
+카메라를 인물 본인의 오른쪽 90도 위치에 두고 촬영합니다. 오른쪽 옆얼굴의 이마, 코, 입술, 턱 윤곽을 선명하게 보여줍니다.
+
+4. 정확한 좌측면
+카메라를 인물 본인의 왼쪽 90도 위치에 두고 촬영합니다. 우측면과 반대쪽 얼굴을 보여주며, 우측면 사진을 좌우 반전하여 사용하지 않습니다.
+
+5. 위에서 내려다본 시점
+카메라를 눈높이보다 높게 두고 약 30~45도 각도로 비스듬히 내려다봅니다. 얼굴, 어깨, 손과 제품의 위치 관계가 보이도록 합니다. 인물이 카메라를 따라 고개를 들지 않도록 합니다.
+
+6. 얼굴 중심 근접 촬영
+기준 사진의 얼굴 방향을 유지하며 얼굴 중심으로 가까이 촬영합니다. 이목구비와 피부 질감을 선명하게 보여주고, 제품이 있다면 얼굴과 제품이 함께 보이도록 구성합니다.
+
+7. 멀리서 풀샷
+카메라를 충분히 뒤로 이동하여 머리부터 발끝까지 전신이 모두 보이도록 촬영합니다. 기준 사진의 동작과 자세를 유지하고, 신체 비율과 주변 공간을 자연스럽게 표현합니다.
+
+8. 항공샷
+카메라를 인물의 머리 바로 위 높은 위치에 두고 수직으로 내려다보는 탑뷰로 촬영합니다. 정수리, 어깨, 팔, 손과 제품, 주변 바닥이 보이도록 합니다. 5번의 비스듬한 하이앵글과 명확히 구분합니다.
+
+9. 오버숄더 샷
+카메라를 인물의 오른쪽 어깨 뒤에 두고 어깨 너머를 촬영합니다. 뒤통수와 어깨 일부가 전경에 보이고, 인물이 바라보는 방향과 손에 든 제품이 화면 중심에 드러나도록 합니다. 얼굴을 보여주기 위해 고개를 돌리지 않습니다.
+
+[배치 및 완성 조건]
+- 가로형 16:9 화면 안에 3행 3열로 균등하게 배치합니다.
+- 첫째 줄: 정면 / 사선 45도 / 정확한 우측면
+- 둘째 줄: 정확한 좌측면 / 위에서 내려다본 시점 / 얼굴 중심 근접 촬영
+- 셋째 줄: 멀리서 풀샷 / 항공샷 / 오버숄더 샷
+- 각 칸의 여백과 사진 톤을 통일합니다.
+- 인물의 자세를 바꾸지 않고 카메라가 이동한 것으로 표현합니다.
+- 각 촬영 시점과 거리의 차이가 분명하게 보이도록 구성합니다.
+- 글자, 번호, 로고, 워터마크는 넣지 않습니다.
+- 인물 변경, 의상 변경, 제품 변형, 손가락 오류, 중복 신체는 제외합니다.
+</script>
+
+<script type="text/plain" class="prompt-src" data-step="4" data-title="인물·공간·포즈 합성하기" data-desc="인물 사진, 배경 공간 사진, 포즈 사진을 각각의 기준으로 합쳐 실제 그 공간에서 촬영한 것 같은 사진 한 장을 만듭니다." data-attach="① 인물 사진 ② 배경 공간 사진 ③ 포즈 사진 (이 순서대로 3장)" data-samples="sample-4-person.jpg|첫 번째 사진|인물 기준;sample-4-space.jpg|두 번째 사진|배경 기준 · 버거 매장;sample-4-pose.jpg|세 번째 사진|포즈 기준" data-note="샘플 3장을 &lt;b&gt;순서대로&lt;/b&gt; 첨부하세요. 순서가 바뀌면 인물·배경·포즈 기준이 뒤섞입니다.">
+첨부한 세 이미지를 활용해 첫 번째 사진의 여성이 두 번째 사진의 공간에서 세 번째 사진의 포즈를 취하는 사실적인 사진을 제작해 주세요.
+- 첫 번째 사진 — 인물 기준: 얼굴형, 이목구비, 피부톤, 헤어스타일과 의상을 유지하세요.
+- 두 번째 사진 — 배경 기준: 공간 구조, 인테리어, 가구 배치, 촬영 구도와 조명을 유지하세요.
+- 세 번째 사진 — 포즈 기준: 몸의 방향, 팔과 손의 위치, 얼굴 각도와 시선을 적용하세요. 인물의 외모나 의상, 배경은 가져오지 마세요.
+- 인물의 크기와 위치를 배경의 원근과 가구 비율에 맞추고, 손발과 신체가 주변 사물에 자연스럽게 닿도록 표현하세요.
+- 피부와 의상에 배경의 빛과 색감을 반영하고, 접촉 그림자를 더해 실제 그 공간에서 촬영한 사진처럼 완성해 주세요.
+첫 번째 사진의 인물, 두 번째 사진의 공간, 세 번째 사진의 포즈를 각각의 기준으로 정확히 반영하세요.
+</script>
+
+<script type="text/plain" class="prompt-src" data-step="5" data-title="매장 다각도 촬영 레퍼런스 시트 만들기" data-desc="STEP 4의 매장 식사 사진과 STEP 3의 모델 스토리보드를 합쳐, 같은 순간을 매장 안 여러 카메라로 동시에 찍은 것 같은 다각도 시트를 만듭니다." data-attach="① 매장 식사 사진(STEP 4 결과) ② 모델 스토리보드(STEP 3 결과)" data-samples="sample-5-store-meal.jpg|첫 번째 이미지|매장 식사 사진;sample-3-reference.jpg|두 번째 이미지|모델 스토리보드 (STEP 3 샘플)" data-note="내 결과물 대신 샘플 2장을 &lt;b&gt;순서대로&lt;/b&gt; 받아서 연습해도 됩니다.">
+첨부한 매장 식사 사진과 모델 스토리보드를 활용하여, 동일한 여성이 같은 매장 좌석에서 버거를 먹는 모습을 여러 방향에서 보여주는 ‘다각도 촬영 레퍼런스 시트’를 제작해 주세요.
+
+[이미지별 역할]
+1. 매장 식사 사진 — 장면의 최우선 기준
+여성의 얼굴, 헤어스타일, 의상, 표정, 앉은 위치와 자세, 버거의 형태와 재료 구성, 양손으로 잡는 위치를 유지하세요. 매장 구조와 가구 배치, 조명과 색감도 이 사진을 기준으로 하세요.
+
+2. 모델 스토리보드 — 촬영 시점과 배치 기준
+각 칸의 카메라 방향, 촬영 높이, 거리와 화면 구성을 파악하여 같은 순서로 적용하세요. 다른 각도에서 보이는 인물의 외형도 참고하되, 외형이 충돌하면 매장 식사 사진을 우선하세요. 스토리보드의 배경은 가져오지 마세요.
+
+[공간과 인물의 일관성]
+- 한 순간을 여러 카메라로 동시에 촬영한 것처럼 표현하세요.
+- 여성은 모든 컷에서 동일한 좌석에 앉아 같은 방향을 바라보고, 같은 동작을 유지해야 합니다.
+- 인물이나 가구를 돌리거나 이동하지 말고, 카메라의 위치와 촬영 거리만 변경하세요.
+- 테이블, 의자, 벽, 창문, 카운터와 소품의 실제 위치 및 서로의 거리 관계를 유지하세요.
+- 카메라 이동에 따른 원근, 가림과 배경의 보이는 범위 변화는 자연스럽게 반영하세요. 원본 배경을 모든 컷에 똑같이 붙이지 마세요.
+- 원본에 보이지 않는 공간은 기존 매장 구조와 연결되도록 최소한으로 보완하고, 컷마다 일관되게 유지하세요.
+- 눈은 자연스럽게 뜨고, 양손은 버거 밑부분과 양옆을 안정적으로 잡도록 표현하세요.
+
+[배치와 완성 조건]
+- 모델 스토리보드와 동일한 컷 수, 순서와 격자 배치로 구성하세요.
+- 각 컷은 스튜디오 인물 사진이 아닌, 실제 매장 안에서 촬영한 식사 장면이어야 합니다.
+- 전체 시트는 가로형 16:9로 제작하고, 각 칸의 간격과 사진 톤을 통일하세요.
+- 각도와 촬영 거리의 차이가 분명하게 드러나도록 하세요.
+- 글자, 번호, 로고, 워터마크는 추가하지 마세요.
+- 인물 변경, 의상 변경, 버거 변형, 손가락 오류, 신체와 가구의 관통은 제외하세요.
+</script>
+
+<script type="text/plain" class="prompt-src" data-step="6" data-title="포즈·카메라 시점 바꾸기" data-desc="첫 번째 사진의 인물과 공간은 그대로 두고, 두 번째 사진의 먹는 포즈와 카메라 위치를 적용해 다른 시점에서 찍은 컷을 만듭니다." data-attach="① 인물 사진 ② 포즈·카메라 시점 사진 (이 순서대로 2장)" data-samples="sample-6-person.jpg|첫 번째 사진|인물 기준;sample-6-pose.jpg|두 번째 사진|포즈·카메라 시점 기준" data-note="두 번째 사진에서는 &lt;b&gt;포즈와 카메라 위치만&lt;/b&gt; 가져옵니다. 남성의 외모·의상·노란 소파는 반영되지 않습니다.">
+첫 번째 사진의 여성에게 두 번째 사진의 포즈와 카메라 촬영 시점을 적용해 사실적인 사진 한 장을 제작해 주세요.
+- 인물 기준: 첫 번째 여성의 얼굴형, 이목구비, 피부톤, 헤어스타일과 의상을 유지하세요.
+- 포즈 기준: 두 번째 사진처럼 앉아서 상체를 살짝 앞으로 기울이고, 양팔을 굽혀 양손으로 버거를 입 가까이 들어 먹는 자세를 적용하세요.
+- 카메라 기준: 두 번째 사진에서 카메라가 인물을 바라보는 위치·높이·방향·거리를 참고하세요. 테이블 건너편에서 인물의 정면보다 약간 옆으로 비켜 바라보는 사선 구도로, 얼굴과 상반신, 양팔 및 테이블 일부가 함께 보이도록 촬영하세요. 얼굴만 돌려 비슷하게 표현하지 말고, 카메라와 인물의 상대적인 위치를 맞춰 주세요.
+- 얼굴과 시선: 두 번째 사진의 얼굴 기울기와 방향을 참고하고, 눈을 자연스럽게 뜬 채 카메라를 바라보게 하세요.
+- 배경 기준: 첫 번째 사진의 매장 구조, 가구 배치, 소품과 조명·색감을 유지하세요. 카메라 시점이 달라지면서 생기는 원근과 가림, 배경의 보이는 범위 변화만 허용하세요. 두 번째 사진의 인물 외모·의상·노란 소파·배경은 가져오지 마세요.
+첫 번째 사진의 인물과 공간을 유지한 상태에서, 두 번째 사진을 찍은 카메라 위치에서 촬영한 것처럼 표현해 주세요.
+</script>
+
+<script type="text/plain" class="prompt-src" data-step="7" data-sub="1" data-title="포즈·카메라 시점 컷 만들기" data-desc="콘티보드에 넣을 식사 컷을 먼저 만듭니다. 인물과 매장은 유지하고, 포즈와 카메라 위치만 바꿉니다." data-attach="① 인물·매장 사진 ② 포즈·카메라 시점 사진">
+첫 번째 사진의 여성에게 두 번째 사진의 포즈와 카메라 촬영 시점을 적용해 사실적인 사진 한 장을 제작해 주세요.
+- 인물 기준: 첫 번째 여성의 얼굴형, 이목구비, 피부톤, 헤어스타일과 의상을 유지하세요.
+- 포즈 기준: 두 번째 사진처럼 앉아서 상체를 살짝 앞으로 기울이고, 양팔을 굽혀 양손으로 버거를 입 가까이 들어 먹는 자세를 적용하세요.
+- 카메라 기준: 두 번째 사진에서 카메라가 인물을 바라보는 위치·높이·방향·거리를 참고하세요. 테이블 건너편에서 인물의 정면보다 약간 옆으로 비켜 바라보는 사선 구도로, 얼굴과 상반신, 양팔 및 테이블 일부가 함께 보이도록 촬영하세요. 얼굴만 돌려 비슷하게 표현하지 말고, 카메라와 인물의 상대적인 위치를 맞춰 주세요.
+- 얼굴과 시선: 두 번째 사진의 얼굴 기울기와 방향을 참고하고, 눈을 자연스럽게 뜬 채 카메라를 바라보게 하세요.
+- 배경 기준: 첫 번째 사진의 매장 구조, 가구 배치, 소품과 조명·색감을 유지하세요. 카메라 시점이 달라지면서 생기는 원근과 가림, 배경의 보이는 범위 변화만 허용하세요. 두 번째 사진의 인물 외모·의상·노란 소파·배경은 가져오지 마세요.
+첫 번째 사진의 인물과 공간을 유지한 상태에서, 두 번째 사진을 찍은 카메라 위치에서 촬영한 것처럼 표현해 주세요.
+</script>
+
+<script type="text/plain" class="prompt-src" data-step="7" data-sub="2" data-title="실사 콘티보드 만들기" data-desc="30초 광고 콘티와 지금까지 만든 이미지를 장면 순서대로 배치해, 이미지와 설명이 함께 있는 콘티보드 한 장을 만듭니다." data-attach="30초 광고 콘티(TXT) + 지금까지 만든 장면 이미지들">
+앞서 작성한 30초 광고 콘티와 첨부 이미지들을 활용하여, 실제 이미지가 들어간 콘티보드 한 장을 제작해 주세요.
+
+[구성]
+- 장면을 시간 순서대로 배치하고, 각 장면의 칸에 적합한 첨부 이미지를 직접 넣어 주세요.
+- 파일명이나 이미지 설명으로 대체하지 마세요.
+- 여러 컷으로 구성된 시트는 해당 장면에 필요한 컷만 잘라서 사용하세요.
+- 각 이미지 아래에 ‘장면 번호 / 시간 / 장면 설명 / 동작과 카메라 움직임 / 자막·내레이션’을 짧게 정리하세요.
+
+[제작 기준]
+- 기존 콘티의 이야기 흐름과 감정 변화를 유지하세요.
+- 인물, 의상, 매장과 버거의 일관성을 유지하세요.
+- 첨부 이미지를 우선 사용하고, 적합한 이미지가 없는 장면은 빈 이미지 칸에 ‘추가 제작 필요’라고 표시하세요.
+- 전체 영상 길이는 정확히 30초로 맞추세요.
+- 마지막은 버거가 먹음직스럽게 돋보이는 제품 단독 이미지로 마무리하세요.
+- 이미지와 설명을 한눈에 비교할 수 있는 격자형 레이아웃으로 구성하세요.
+- 한글 설명이 읽기 쉽도록 충분한 해상도로 제작하세요.
+
+텍스트 표가 아닌, 실제 장면 이미지와 설명이 함께 배치된 완성형 콘티보드 이미지로 만들어 주세요.
+</script>
+
+<script type="text/plain" class="prompt-src" data-step="7" data-sub="3" data-title="추가 제작 이미지 생성하기" data-desc="콘티보드에서 ‘추가 제작 필요’로 표시된 빈 칸의 이미지를 채웁니다.">
+추가 제작 필요한 이미지 각각 생성해주세요
+</script>
+
+<script type="text/plain" class="prompt-src" data-step="8" data-title="클링 영상 프롬프트 콘티보드 만들기" data-desc="빈 칸을 채운 콘티보드를 다시 만들고, 장면마다 클링 이미지→영상 프롬프트와 스타트·엔드 프레임 연결 여부를 정리합니다." data-attach="STEP 7 콘티보드 + 추가 제작한 이미지들" data-files="files/burger-kling-prompts.txt|햄버거_30초광고_클링_프롬프트.txt|햄버거 30초 광고 · 클링 이미지→영상 제작 프롬프트|완성 예시 · 장면별 시간·영상 프롬프트·자막 (복사용 텍스트);files/burger-conti-board.pdf|햄버거_클링_콘티보드_5페이지.pdf|햄버거 클링 콘티보드 (5페이지)|완성 예시 · 장면 이미지와 영상 프롬프트가 함께 들어간 콘티보드">
+이제 추가 제작 필요한 부분에 새로운 이미지를 넣은 콘티보드를 다시 만들어주고,
+각 장면에 사용할 이미지와 함께, 클링에서 이미지→영상으로 변환할 수 있는 영상 프롬프트를 작성해 주세요.
+
+- 영상 프롬프트에는 인물·제품의 핵심 동작, 표정 변화, 카메라 움직임을 구체적으로 적어 주세요.
+- 한 클립에는 핵심 동작 1개와 카메라 움직임 1개를 중심으로 구성하세요.
+- 인물의 얼굴·의상, 매장 구조·가구 배치, 버거의 외형을 유지하도록 명시하세요.
+- 각 장면에 필요한 생성 영상 길이와 최종 편집에 사용할 길이를 구분해 주세요.
+
+[스타트·엔드 프레임 연결 판단]
+- 첨부 이미지 중 같은 장면의 시작과 끝으로 자연스럽게 연결할 수 있는 이미지 쌍을 선정하세요.
+- 연결 가능한 경우 ‘스타트·엔드 프레임 사용’이라고 표시하고, 시작 이미지와 종료 이미지를 실제로 나란히 배치하세요.
+- 두 이미지 사이의 동작과 카메라 이동이 자연스럽게 이어지도록 전용 영상 프롬프트를 작성하세요.
+- 인물, 장소, 자세, 버거를 먹은 정도와 촬영 각도의 연속성을 확인하세요. 무리한 변형이나 급격한 공간 이동이 필요한 이미지끼리는 연결하지 마세요.
+- 연결이 적합하지 않은 장면은 ‘단일 이미지→영상’으로 표시하고, 다음 장면과는 편집으로 연결하도록 안내하세요.
+- 스타트·엔드 프레임을 사용하는 두 이미지는 하나의 영상 클립으로 계산하여 전체 30초 시간표에 중복 반영하지 마세요.
+
+[콘티보드 표시 항목]
+각 장면에 다음 내용을 배치하세요.
+① 장면 번호와 시간
+② 실제 사용할 이미지 — 연결형은 시작·종료 이미지 모두 표시
+③ 장면 내용
+④ 제작 방식 — 단일 이미지→영상 / 스타트·엔드 프레임
+⑤ 클링에 붙여넣을 영상 프롬프트
+⑥ 자막·내레이션
+
+콘티보드는 실제 이미지가 포함된 시각 자료로 제작하세요. 긴 프롬프트로 글자가 작아지면 콘티보드를 여러 페이지로 나누고, 동일한 장면 번호의 영상 프롬프트를 복사할 수 있는 텍스트로도 함께 제공하세요.
+</script>
+
+<script>
+(function(){
+  var srcs = document.querySelectorAll('.prompt-src');
+  var box = document.getElementById('steps');
+  var toast = document.getElementById('toast');
+  var AB = window.ASSET_BASE || '';   /* 외부 배포 시 파일 위치 */
+  var icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function render(text){
+    return text.split('\n').map(function(line){
+      var e = esc(line);
+      if(/^##\s/.test(line)) return '<span class="h">'+e+'</span>';
+      return e.replace(/\[([^\]]+)\]/g,'<span class="ph">[$1]</span>');
+    }).join('\n').replace(/<\/span>\n/g,'</span>');
+  }
+
+  srcs.forEach(function(s, i){
+    var text = s.textContent.replace(/^\s*\n/,'').replace(/\s+$/,'');
+    var step = s.dataset.step || (i+1);
+    var sub = s.dataset.sub || '';
+    var n = step + (sub ? '-'+sub : '');
+    var card = document.createElement('article');
+    card.className = 'card';
+    card.id = 'card-'+n;
+    card.dataset.page = step;
+    card.innerHTML =
+      (s.dataset.files ? filesHTML(s.dataset.files) : '')+
+      '<div class="card-head">'+
+        '<span class="step-no">STEP '+String(step).padStart(2,'0')+(sub ? ' · '+sub : '')+'</span>'+
+        '<h3>'+esc(s.dataset.title||'')+'</h3>'+
+        '<button type="button" class="copy-btn" id="copy-'+n+'" aria-label="STEP '+n+' 프롬프트 복사">'+icon+'<span>COPY</span></button>'+
+      '</div>'+
+      (s.dataset.samples ? samplesHTML(s.dataset.samples, n, s.dataset.note) : '')+
+      (s.dataset.desc ? '<p class="card-desc">'+esc(s.dataset.desc)+'</p>' : '')+
+      '<pre class="prompt" id="prompt-'+n+'">'+render(text)+'</pre>'+
+      (s.dataset.attach ? '<div class="card-foot"><span><b>첨부</b> '+esc(s.dataset.attach)+'</span></div>' : '');
+    box.appendChild(card);
+
+    var btn = card.querySelector('.copy-btn');
+    var pre = card.querySelector('.prompt');
+    btn.addEventListener('click', function(){
+      var ok = function(){
+        btn.classList.add('done'); btn.querySelector('span').textContent='COPIED';
+        show('STEP '+n+' 프롬프트를 복사했습니다');
+        setTimeout(function(){btn.classList.remove('done');btn.querySelector('span').textContent='COPY';},1600);
+      };
+      var fallback = function(){
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        var done=false; try{done=document.execCommand('copy');}catch(e){}
+        if(done){ok();} else {show('본문이 선택되었습니다. Ctrl+C(⌘+C)로 복사하세요');}
+      };
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(text).then(ok, fallback);
+        } else fallback();
+      }catch(e){fallback();}
+    });
+  });
+
+  /* ---------- 페이지 넘김: 0 = 표지, 1~N = STEP ---------- */
+  var cover = document.querySelector('.cover');
+  var main = document.querySelector('main.page');
+  var cards = Array.prototype.slice.call(box.querySelectorAll('.card'));
+  var pageIds = [];
+  cards.forEach(function(c){ if(pageIds.indexOf(c.dataset.page)<0) pageIds.push(c.dataset.page); });
+  var total = pageIds.length, cur = 0;
+  var prevB = document.getElementById('pgPrev'), nextB = document.getElementById('pgNext'), dots = document.getElementById('pgDots');
+  var labels = ['표지'].concat(pageIds.map(function(p){return 'STEP '+p;}));
+  dots.innerHTML = labels.map(function(l,i){return '<button type="button" class="pg-dot" id="pgDot-'+i+'" data-i="'+i+'">'+l+'</button>';}).join('');
+  function go(i, push){
+    cur = Math.max(0, Math.min(total, i));
+    cover.hidden = cur !== 0;
+    main.hidden = cur === 0;
+    cards.forEach(function(c){ c.hidden = c.dataset.page !== pageIds[cur-1]; });
+    document.getElementById('stepCount').textContent = cur ? 'STEP '+cur+' / '+total : '';
+    prevB.disabled = cur === 0; nextB.disabled = cur === total;
+    nextB.textContent = cur === 0 ? '시작 →' : '다음 →';
+    dots.querySelectorAll('.pg-dot').forEach(function(d,k){ if(k===cur) d.setAttribute('aria-current','page'); else d.removeAttribute('aria-current'); });
+    try{ if(push!==false) history.replaceState(null,'', cur ? '#step-'+cur : '#cover'); }catch(e){}
+    window.scrollTo(0,0);
+  }
+  prevB.addEventListener('click', function(){go(cur-1);});
+  nextB.addEventListener('click', function(){go(cur+1);});
+  document.getElementById('coverStart').addEventListener('click', function(){go(1);});
+  dots.addEventListener('click', function(e){ var b=e.target.closest('.pg-dot'); if(b) go(+b.dataset.i); });
+  document.addEventListener('keydown', function(e){
+    if(/INPUT|TEXTAREA/.test((e.target||{}).tagName||'')) return;
+    if(e.key==='ArrowRight') go(cur+1); else if(e.key==='ArrowLeft') go(cur-1);
+  });
+  var m = /^#step-(\d+)$/.exec(location.hash||'');
+  go(m ? +m[1] : 0, false);
+
+  /* ---------- 실습 파일 다운로드 (경로|저장 파일명|제목|설명) ---------- */
+  function filesHTML(spec){
+    var dl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>';
+    return '<div class="filebox"><div class="filebox-title">실습 파일</div>'+spec.split(';').map(function(row, i){
+      var p = row.split('|'), ext = (p[1].split('.').pop()||'').toUpperCase();
+      return '<div class="file-row"><span class="file-ext">'+esc(ext)+'</span>'+
+        '<span class="file-info"><b>'+esc(p[2]||p[1])+'</b><small>'+esc(p[3]||'')+'</small></span>'+
+        '<a class="dl-btn" id="file-'+i+'-'+esc(p[0].replace(/\W/g,''))+'" href="'+AB+p[0]+'" target="_blank" rel="noopener" data-file="'+AB+p[0]+'" data-name="'+esc(p[1])+'">'+dl+'DOWNLOAD</a></div>';
+    }).join('')+'</div>';
+  }
+
+  /* ---------- 샘플 이미지 다운로드 ---------- */
+  function samplesHTML(spec, n, note){
+    var dl = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>';
+    var rows = spec.split(';');
+    var items = rows.map(function(row, i){
+      var p = row.split('|'), file = p[0];
+      return '<figure class="sample" style="margin:0">'+
+        '<img src="'+AB+file+'" alt="'+esc(p[1]+' '+(p[2]||''))+'" loading="lazy"'+(p[3] ? ' style="aspect-ratio:'+p[3]+'"' : '')+'>'+
+        '<figcaption class="sample-body"><span class="sample-label">'+esc(p[1])+'<small>'+esc(p[2]||'')+'</small></span>'+
+        '<a class="dl-btn" id="dl-'+n+'-'+i+'" href="'+AB+file+'" target="_blank" rel="noopener" data-file="'+AB+file+'">'+dl+'DOWNLOAD</a></figcaption></figure>';
+    }).join('');
+    return '<div class="samples'+(rows.length===1 ? ' one' : '')+'">'+items+'</div>'+
+      (note ? '<p class="sample-note">'+note+'</p>' : '');
+  }
+
+  var dlApi;
+  if(window.claude && window.claude.use){
+    window.claude.use('downloads').then(function(d){dlApi=d;}).catch(function(){});
+  }
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('.dl-btn');
+    if(!a) return;
+    var file = a.dataset.file, name = a.dataset.name || file.split('/').pop();
+    if(!dlApi){
+      if(!AB) return;                   /* 기능이 없으면 새 탭에서 열기 */
+      e.preventDefault();               /* 외부 배포: 바로 내려받기 */
+      fetch(file).then(function(r){ if(!r.ok) throw 0; return r.blob(); }).then(function(b){
+        var u = URL.createObjectURL(b), t = document.createElement('a');
+        t.href = u; t.download = name; document.body.appendChild(t); t.click(); t.remove();
+        setTimeout(function(){URL.revokeObjectURL(u);}, 4000);
+        show(name+' 다운로드를 시작했습니다');
+      }).catch(function(){ window.open(file,'_blank'); });
+      return;
+    }
+    e.preventDefault();
+    fetch(file).then(function(r){ if(!r.ok) throw 0; return r.blob(); })
+      .then(function(b){ return dlApi.save({filename:name, data:b}); })
+      .then(function(){ show(name+' 저장했습니다'); })
+      .catch(function(err){
+        if(err && err.code==='declined') return;
+        show('다운로드가 안 되면 이미지를 길게 누르거나 우클릭해 저장하세요');
+      });
+  });
+
+  var t;
+  function show(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(t);t=setTimeout(function(){toast.classList.remove('show');},1800);}
+})();
+</script>
+
+</body></html>
